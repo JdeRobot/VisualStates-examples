@@ -34,6 +34,10 @@ Recompile the ROS Workspace and you would find a new package prius_spawn in the 
 ```
 source devel/setup.bash
 ```
+Add the CloverLeaf model to Gazebo models by adding the following line to your environment variables.
+```
+export GAZEBO_MODEL_PATH=<path_to_PriusSpawnExample>/prius_gazebo/models:$GAZEBO_MODEL_PATH
+```
 Start the Gazebo simulator and spawn Toyota Prius Car with Prius world, using the toyota prius world launch file
 ```
 roslaunch prius_gazebo prius_world.launch

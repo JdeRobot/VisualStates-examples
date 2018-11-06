@@ -40,7 +40,7 @@ export GAZEBO_MODEL_PATH=<path_to_PriusSpawnExample>/prius_gazebo/models:$GAZEBO
 ```
 Start the Gazebo simulator and spawn Toyota Prius Car with Prius world, using the toyota prius world launch file
 ```
-roslaunch prius_gazebo prius_world.launch
+roslaunch prius_gazebo prius.launch
 ```
 Run our generated ROS Node and visualize Toyota Prius Car Spawn Behavior.
 ```

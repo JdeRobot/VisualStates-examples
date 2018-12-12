@@ -5,8 +5,8 @@
   
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="verbose" value="true"/>
-    <arg name="world_name" value="$(find prius_gazebo)/worlds/prius_obstacle.world"/>
+    <arg name="world_name" value="$(find prius_gazebo)/worlds/prius_cone.world"/>
   </include>
   
-  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -x 18 -y -5 -z 0 -roll 0 -pitch 0 -yaw 0 -model prius"/>
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -x 14 -y -5 -z 0 -model prius"/>
 </launch>

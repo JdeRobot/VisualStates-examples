@@ -2,18 +2,16 @@
 <VisualStates>
   <config type="1">
     <buildDependencies>
-      <dependency>roscpp</dependency>
+      <dependency>rospy</dependency>
       <dependency>sensor_msgs</dependency>
       <dependency>geometry_msgs</dependency>
       <dependency>prius_msgs</dependency>
-      <dependency>rospy</dependency>
     </buildDependencies>
     <runDependencies>
-      <dependency>roscpp</dependency>
+      <dependency>rospy</dependency>
       <dependency>sensor_msgs</dependency>
       <dependency>geometry_msgs</dependency>
       <dependency>prius_msgs</dependency>
-      <dependency>rospy</dependency>
     </runDependencies>
     <topics>
       <topic id="0">
@@ -24,16 +22,6 @@
       <topic id="1">
         <name>/prius/front_left_laser/scan</name>
         <type>sensor_msgs/LaserScan</type>
-        <opType>Subscribe</opType>
-      </topic>
-      <topic id="2">
-        <name>/prius/front_right_laser/scan</name>
-        <type>sensor_msgs/LaserScan</type>
-        <opType>Subscribe</opType>
-      </topic>
-      <topic id="3">
-        <name>/prius/center_laser/scan</name>
-        <type>sensor_msgs/PointCloud</type>
         <opType>Subscribe</opType>
       </topic>
     </topics>
@@ -51,19 +39,23 @@
     <timestep>100</timestep>
     <namespace>
       <functions>def calculate_obstacle(self):
-	points = self.globalNamespace.prius_center_laser_scan.points
-	for val in points:
-		if val.x &lt; self.obstacle_threshold:
+	left_laser = self.globalNamespace.prius_front_left_laser_scan
+	ranges = left_laser.ranges
+	for val in ranges:
+		if val &lt; 3.5 and val &gt; 2:
 			self.is_obstacle = True
 			return
-	self.is_obstacle = False
+		self.is_obstacle = False
+		
 	</functions>
       <variables>self.is_obstacle = False
-self.obstacle_threshold = 10</variables>
+self.is_left = False
+self.is_right = True
+self.is_stop = False</variables>
     </namespace>
     <state id="1" initial="True">
-      <posx>982.0</posx>
-      <posy>851.0</posy>
+      <posx>993.0</posx>
+      <posy>850.0</posy>
       <name>Move</name>
       <code>command = Control()
 command.throttle = 0.2
@@ -78,20 +70,105 @@ self.globalNamespace.publishprius(command)</code>
       <transition id="1">
         <type>1</type>
         <condition>self.namespace.calculate_obstacle()
-return self.namespace.is_obstacle</condition>
-        <posx>1072.5</posx>
-        <posy>936.5</posy>
-        <name>obstacle</name>
+return self.namespace.is_obstacle and self.namespace.is_right</condition>
+        <posx>1070.0</posx>
+        <posy>923.0</posy>
+        <name>detectObstacle</name>
         <originid>1</originid>
         <destinationid>2</destinationid>
         <code></code>
       </transition>
+      <transition id="3">
+        <type>1</type>
+        <condition>self.namespace.calculate_obstacle()
+return self.namespace.is_obstacle and self.namespace.is_left</condition>
+        <posx>927.0</posx>
+        <posy>922.0</posy>
+        <name>detectObstacle</name>
+        <originid>1</originid>
+        <destinationid>3</destinationid>
+        <code></code>
+      </transition>
+      <transition id="5">
+        <type>1</type>
+        <condition>self.namespace.calculate_obstacle()
+return self.namespace.is_obstacle and self.namespace.is_stop</condition>
+        <posx>996.5</posx>
+        <posy>963.0</posy>
+        <name>detectObstacle</name>
+        <originid>1</originid>
+        <destinationid>4</destinationid>
+        <code></code>
+      </transition>
     </state>
     <state id="2" initial="False">
-      <posx>977.0</posx>
-      <posy>1020.0</posy>
-      <name>Avoid</name>
-      <code></code>
+      <posx>1146.0</posx>
+      <posy>842.0</posy>
+      <name>AvoidRightCone</name>
+      <code>self.namespace.is_right = False
+self.namespace.is_left = True</code>
+      <timestep>100</timestep>
+      <namespace>
+        <functions></functions>
+        <variables></variables>
+      </namespace>
+      <transition id="2">
+        <type>0</type>
+        <time>3000</time>
+        <posx>1066.0</posx>
+        <posy>773.0</posy>
+        <name>Avoided</name>
+        <originid>2</originid>
+        <destinationid>1</destinationid>
+        <code></code>
+      </transition>
+      <state id="5" initial="True">
+        <posx>984.0</posx>
+        <posy>876.0</posy>
+        <name>SteerRight</name>
+        <code>command = Control()
+command.throttle = 0.2
+command.brake = 0
+command.steer = -0.7
+self.globalNamespace.publishprius(command)</code>
+        <timestep>100</timestep>
+        <namespace>
+          <functions></functions>
+          <variables></variables>
+        </namespace>
+        <transition id="6">
+          <type>0</type>
+          <time>1400</time>
+          <posx>985.0</posx>
+          <posy>951.0</posy>
+          <name>on road</name>
+          <originid>5</originid>
+          <destinationid>6</destinationid>
+          <code></code>
+        </transition>
+      </state>
+      <state id="6" initial="False">
+        <posx>986.0</posx>
+        <posy>1026.0</posy>
+        <name>SteerLeft</name>
+        <code>command = Control()
+command.throttle = 0.2
+command.brake = 0.1
+command.steer = 0.7
+self.globalNamespace.publishprius(command)</code>
+        <timestep>100</timestep>
+        <namespace>
+          <functions></functions>
+          <variables></variables>
+        </namespace>
+      </state>
+    </state>
+    <state id="3" initial="False">
+      <posx>858.0</posx>
+      <posy>846.0</posy>
+      <name>AvoidLeftCone</name>
+      <code>self.namespace.is_left = False
+self.namespace.is_stop = True</code>
       <timestep>100</timestep>
       <namespace>
         <functions></functions>
@@ -99,50 +176,48 @@ return self.namespace.is_obstacle</condition>
       </namespace>
       <transition id="4">
         <type>0</type>
-        <time>2500</time>
-        <posx>932.5</posx>
-        <posy>975.5</posy>
+        <time>2400</time>
+        <posx>918.0</posx>
+        <posy>774.0</posy>
         <name>Avoided</name>
-        <originid>2</originid>
-        <destinationid>5</destinationid>
+        <originid>3</originid>
+        <destinationid>1</destinationid>
         <code></code>
       </transition>
-      <state id="3" initial="True">
-        <posx>978.0</posx>
-        <posy>841.0</posy>
-        <name>SteerRight</name>
-        <code>command = Control()
-command.throttle = 0.2
-command.brake = 0
-command.steer = -0.7
-self.globalNamespace.publishprius(command)
-</code>
-        <timestep>100</timestep>
-        <namespace>
-          <functions></functions>
-          <variables></variables>
-        </namespace>
-        <transition id="3">
-          <type>0</type>
-          <time>1100</time>
-          <posx>980.0</posx>
-          <posy>923.5</posy>
-          <name>on road</name>
-          <originid>3</originid>
-          <destinationid>4</destinationid>
-          <code></code>
-        </transition>
-      </state>
-      <state id="4" initial="False">
+      <state id="7" initial="True">
         <posx>980.0</posx>
-        <posy>1006.0</posy>
+        <posy>908.0</posy>
         <name>SteerLeft</name>
         <code>command = Control()
 command.throttle = 0.2
 command.brake = 0
 command.steer = 0.7
-self.globalNamespace.publishprius(command)
-</code>
+self.globalNamespace.publishprius(command)</code>
+        <timestep>100</timestep>
+        <namespace>
+          <functions></functions>
+          <variables></variables>
+        </namespace>
+        <transition id="7">
+          <type>0</type>
+          <time>1200</time>
+          <posx>981.0</posx>
+          <posy>975.5</posy>
+          <name>on road</name>
+          <originid>7</originid>
+          <destinationid>8</destinationid>
+          <code></code>
+        </transition>
+      </state>
+      <state id="8" initial="False">
+        <posx>982.0</posx>
+        <posy>1043.0</posy>
+        <name>SteerRight</name>
+        <code>command = Control()
+command.throttle = 0.2
+command.brake = 0
+command.steer = -0.7
+self.globalNamespace.publishprius(command)</code>
         <timestep>100</timestep>
         <namespace>
           <functions></functions>
@@ -150,9 +225,9 @@ self.globalNamespace.publishprius(command)
         </namespace>
       </state>
     </state>
-    <state id="5" initial="False">
-      <posx>879.0</posx>
-      <posy>933.0</posy>
+    <state id="4" initial="False">
+      <posx>999.0</posx>
+      <posy>1063.0</posy>
       <name>Stop</name>
       <code>command = Control()
 command.throttle = 0

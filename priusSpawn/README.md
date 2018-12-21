@@ -6,18 +6,20 @@ The following example in VisualStates demonstrates the Prius Toyota Car Spawn be
 We assume that you already installed ROS Kinetic and Gazebo 9 on Ubuntu 16.04 system to be able to test the behaviors. However, if you did not install yet, you can do so following these pages: [http://wiki.ros.org/kinetic/Installation/Ubuntu](http://wiki.ros.org/kinetic/Installation/Ubuntu)  [http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)
 
 ### ROS Package Generation
-1. Copy Prius messages, world, description packages from [PriusSpawn](/priusSpawn) and paste it in the ROS Workshop. Also copy the VisualStates prius_spawn.xml file which contains the example behavior.
+1. Copy Prius messages, world, description packages from [PriusData](/PriusData) and paste it in your ROS Workshop. Also copy the pre-developed VisualStates XML File.
 ```
 mkdir catkin_ws
 cd catkin_ws
 mkdir src
 cd src
+cp -r <path_to_visualstates_examples>/priusData/* .
 cp -r <path_to_visualstates_examples>/priusSpawn/* .
 cd ..
 ```
 
-2. Copy VisualStates package to the workspace and compile the package and source it.
+2. Copy VisualStates package or clone it to the workspace, compile and source the package.
 ```
+git clone https://github.com/JdeRobot/VisualStates.git
 catkin_make
 source devel/setup.bash
 ```
@@ -40,7 +42,7 @@ export GAZEBO_MODEL_PATH=<path_to_PriusSpawnExample>/prius_gazebo/models:$GAZEBO
 ```
 Start the Gazebo simulator and spawn Toyota Prius Car with Prius world, using the toyota prius world launch file
 ```
-roslaunch prius_gazebo prius.launch
+roslaunch prius_gazebo prius_spawn.launch
 ```
 Run our generated ROS Node and visualize Toyota Prius Car Spawn Behavior.
 ```

@@ -13,7 +13,7 @@ cd catkin_ws
 mkdir src
 cd src
 git clone https://github.com/JdeRobot/VisualStates.git
-cp -r <path_to_visualstates_examples>/priusData/* .
+cp -r <path_to_visualstates_examples>/prius/* .
 cp -r <path_to_visualstates_examples>/priusObstacleAvoidance/* .
 cd ..
 ```
@@ -26,12 +26,12 @@ source devel/setup.bash
 
 3. Generate the ROS Package of the behavior using the **visualstates**.
 ```
-rosrun visualstates main.py <path_to_ros_workspace>/src/priusObstacleAvoidance/prius_obstacle_avoidance.xml
+rosrun visualstates main.py <path_to_ros_workspace>/src/prius_obstacle_avoidance/prius_obstacle_avoidance.xml
 
 ```
 Generate ROS package using `Actions -> Generate Python` menu.
 
-Recompile the ROS Workspace and you would find a new package prius_spawn in the package list. After compiling source the workspace again.
+Recompile the ROS Workspace and you would find a new package prius_obstacle_avoidance in the package list. After compiling source the workspace again.
 
 ```
 source devel/setup.bash

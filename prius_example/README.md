@@ -21,7 +21,7 @@ cd ..
 2. The example also requires the darknet_ros package which would run Yolo v3 on darknet compatible with ROS. Further compile all the ROS packages and source the workspace.
 ```
 cd src
-git clone https://github.com/leggedrobotics/darknet_ros.git
+git clone --recursive https://github.com/leggedrobotics/darknet_ros.git
 cd ..
 catkin_make
 source devel/setup.bash

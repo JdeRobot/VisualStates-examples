@@ -1,15 +1,10 @@
-# obstacle_avoidance Behavior
-The following example in VisualStates demonstrates the Obstacle Avoidance behavior developed for Kobuki-Turtlebot robot developed using ROS Kinetic and simulated in Gazebo7. The behavior consists of 2 states -> `Move` and `Avoid` and transitions based on the laser sensor data to detect and avoid obstacles like wall.  
+# kobuki_bump_and_go Behavior
+The following example in VisualStates demonstrates the Obstacle Avoidance behavior developed for Kobuki-Turtlebot robot developed using ROS Kinetic and simulated in Gazebo9. The behavior consists of 3 states -> `Go`, `Rotate` and `GetBack` and transitions based on the laser sensor data to detect a bump, rotate and move in different direction.  
 
 ## Steps to run the example
 ### Dependencies
 We assume that you already installed ROS and Gazebo on Ubuntu 16.04 system to be able to test the behaviors. However, if you did not install yet, you can do so following these pages: [http://wiki.ros.org/kinetic/Installation/Ubuntu](http://wiki.ros.org/kinetic/Installation/Ubuntu)  [http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)
 
-In addition to ROS and Gazebo, you also need to install kobuki to be able to simulate kobuki/turtlebot robot.
-```
-sudo apt install ros-kinetic-kobuki-gazebo
-sudo apt install ros-kinetic-kobuki-gazebo-plugins
-```
 We also need worlds from JdeRobot repositories. To be able to install jderobot gazebo assets. Please follow the steps here: https://jderobot.org/Installation
 We add required commands here for completeness
 ```
@@ -30,11 +25,11 @@ source /opt/jderobot/share/jderobot/gazebo/gazebo-assets-setup.sh
 ### ROS package generation
 First we must generate the ros package of the behavior using the **visualstates**.
 ```
-rosrun visualstates main.py <path_to_visualstates_examples>/obstacleAvoidance/obstacleAvoidance.xml
+rosrun visualstates main.py <path_to_visualstates_examples>/kobuki_bump_and_go/kobuki_bump_and_go.xml
 ```
-Using `File -> Save As` save the behavior in an empty directory that is also in an active `catkin_workspace`. Since code generation will create required files to make the directory a ROS package, you should have different directory for every new behavior. Now, we can generate ROS package using `Actions -> Generate Python` menu.
+Using `File -> Save As` save the behavior in a directory that is also in an active `catkin_workspace`. Since code generation will create required files to make the directory a ROS package, you should have different directory for every new behavior. Now, we can generate ROS package using `Actions -> Generate Python` menu.
 
-Navigate to your `catkin_workspace` and run `catkin_make`. As an output of `catkin_make` you will see the `obstacle_avoidance_python` listed as a ROS package.
+Navigate to your `catkin_workspace` and run `catkin_make`. As an output of `catkin_make` you will see the `kobuki_bump_and_go` listed as a ROS package.
 ```
 cd catkin_ws
 catkin_make
@@ -49,5 +44,5 @@ rosrun gazebo_ros gazebo kobuki-simple-ros.world
 ```
 Run our generated package
 ```
-rosrun obstacle_avoidance_python obstacle_avoidance_python.py --displaygui=true
+rosrun kobuki_bump_and_go kobuki_bump_and_go.py --displaygui=true
 ```

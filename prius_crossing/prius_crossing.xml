@@ -1,0 +1,277 @@
+<?xml version="1.0" ?>
+<VisualStates>
+  <config type="1">
+    <buildDependencies>
+      <dependency>rospy</dependency>
+      <dependency>sensor_msgs</dependency>
+      <dependency>geometry_msgs</dependency>
+      <dependency>prius_msgs</dependency>
+    </buildDependencies>
+    <runDependencies>
+      <dependency>rospy</dependency>
+      <dependency>sensor_msgs</dependency>
+      <dependency>geometry_msgs</dependency>
+      <dependency>prius_msgs</dependency>
+    </runDependencies>
+    <topics>
+      <topic id="0">
+        <name>/prius</name>
+        <type>prius_msgs/Control</type>
+        <opType>Publish</opType>
+      </topic>
+      <topic id="1">
+        <name>/prius/front_left_laser/scan</name>
+        <type>sensor_msgs/LaserScan</type>
+        <opType>Subscribe</opType>
+      </topic>
+      <topic id="2">
+        <name>/prius/front_right_laser/scan</name>
+        <type>sensor_msgs/LaserScan</type>
+        <opType>Subscribe</opType>
+      </topic>
+      <topic id="3">
+        <name>/joint_states</name>
+        <type>sensor_msgs/JointState</type>
+        <opType>Subscribe</opType>
+      </topic>
+      <topic id="4">
+        <name>/prius/back_camera/image_raw</name>
+        <type>sensor_msgs/Image</type>
+        <opType>Subscribe</opType>
+      </topic>
+      <topic id="5">
+        <name>/prius/front_camera/image_raw</name>
+        <type>sensor_msgs/Image</type>
+        <opType>Subscribe</opType>
+      </topic>
+      <topic id="6">
+        <name>/prius/left_camera/image_raw</name>
+        <type>sensor_msgs/Image</type>
+        <opType>Subscribe</opType>
+      </topic>
+      <topic id="7">
+        <name>/prius/right_camera/image_raw</name>
+        <type>sensor_msgs/Image</type>
+        <opType>Subscribe</opType>
+      </topic>
+      <topic id="8">
+        <name>/darknet_ros/bounding_boxes</name>
+        <type>darknet_ros_msgs/BoundingBoxes</type>
+        <opType>Subscribe</opType>
+      </topic>
+    </topics>
+  </config>
+  <global_namespace>
+    <functions></functions>
+    <variables></variables>
+  </global_namespace>
+  <libraries>
+    <library>numpy as np</library>
+  </libraries>
+  <state id="0" initial="True">
+    <posx>0.0</posx>
+    <posy>0.0</posy>
+    <name>root</name>
+    <code></code>
+    <timestep>100</timestep>
+    <namespace>
+      <functions></functions>
+      <variables></variables>
+    </namespace>
+    <state id="1" initial="True">
+      <posx>877.0</posx>
+      <posy>948.0</posy>
+      <name>crossing</name>
+      <code></code>
+      <timestep>100</timestep>
+      <namespace>
+        <functions>def getRangesForAngle(self, min_angle, max_angle, laser):
+	&quot;&quot;&quot;
+	Applies Angle Mask to Laser
+	&quot;&quot;&quot;
+	laser_ranges = enumerate(laser.ranges)
+	thresh = laser.angle_increment * 180 / 3.14
+	ranges = []
+	for k, g in enumerate(laser.ranges):
+		if k*thresh &gt; min_angle and k*thresh &lt; max_angle:
+			ranges.append(g)
+	return ranges
+
+def region_of_interest(img, vertices):
+	&quot;&quot;&quot;
+	Applies Image Mask to Image
+	&quot;&quot;&quot;
+	mask = np.zeros_like(img)
+	if len(img.shape) &gt; 2:
+		channel_count = img.shape[2]
+		ignore_mask_color = (255,) * channel_count
+	else:
+		ignore_mask_color = 255
+	
+	cv2.fillPoly(mask, vertices, ignore_mask_color)
+	masked_image = cv2.bitwise_and(img,mask)
+	return masked_image
+	
+def calculate_steer(self):
+	left_laser = self.globalNamespace.prius_front_left_laser_scan
+	right_laser = self.globalNamespace.prius_front_right_laser_scan
+	#left_ranges = left_ranges[:len(left_ranges)-100] # Filter for error
+	#right_ranges = right_ranges[100:]  # Filter for error
+	left_ranges = self.getRangesForAngle(40,120, left_laser)# Restrict laser data to front angles
+	right_ranges = self.getRangesForAngle(120,240, right_laser)
+	min_left = min(left_ranges)
+	min_right = min(right_ranges)
+	error = min_left - min_right
+	p = 0.9 * error
+	if p &gt; 1: return 1
+	elif p &lt; -1: return -1
+	else: return p
+
+def calculate_throttle(self, desired_velocity):
+	feedback_velocity = np.average(np.array(self.globalNamespace.joint_states.velocity[:4])) # 4 Wheels
+	error = desired_velocity - feedback_velocity
+	p = 0.5 * error
+	if p &gt; 1: return 1
+	elif p &lt; -1: return -1
+	else: return p
+
+def is_stop_sign_darknet(self):
+	right_ranges = self.globalNamespace.prius_front_right_laser_scan.ranges
+	right_front_ranges = np.array(right_ranges[len(right_ranges) - 200:])
+	from darknet_ros_msgs.msg import BoundingBox
+	bb = BoundingBox()
+	for bbox in self.globalNamespace.darknet_ros_bounding_boxes.bounding_boxes:
+		bb = bbox
+		if str(bb.Class) == &quot;stop sign&quot; and bb.probability &gt; 0.5 and (right_front_ranges &lt; 4).any():
+			print(&quot;Found Stop Sign&quot;)
+			self.is_stop = True
+			return
+	self.is_stop = False
+
+def is_stop_sign(self):
+	right_laser = self.globalNamespace.prius_front_right_laser_scan
+	right_front_ranges = np.array(self.getRangesForAngle(200, 240, right_laser))
+	print(right_front_ranges)
+	#vertices = np.array([[(50, img_h), (450, 310), (490, 310), (img_w - 50, img_h)]], dtype=np.int32)
+	#img_masked = self.region_of_interest(line_img, vertices)
+	if (right_front_ranges &lt; 4).any():
+		self.is_stop = True
+		return
+	self.is_stop = False
+	
+	</functions>
+        <variables>self.is_stop = False</variables>
+      </namespace>
+      <state id="3" initial="True">
+        <posx>916.0</posx>
+        <posy>926.0</posy>
+        <name>stay_on_road</name>
+        <code>throttle = self.namespace.calculate_throttle(10)
+command = Control()
+command.throttle = throttle
+command.brake = 0
+command.steer = 0
+self.globalNamespace.publishprius(command)</code>
+        <timestep>100</timestep>
+        <namespace>
+          <functions></functions>
+          <variables></variables>
+        </namespace>
+        <transition id="1">
+          <type>1</type>
+          <condition>self.namespace.is_stop_sign()
+return self.namespace.is_stop
+</condition>
+          <posx>876.5</posx>
+          <posy>829.5</posy>
+          <name>is_stop_sign</name>
+          <originid>3</originid>
+          <destinationid>4</destinationid>
+          <code></code>
+        </transition>
+      </state>
+      <state id="4" initial="False">
+        <posx>922.0</posx>
+        <posy>732.0</posy>
+        <name>stop_on_sign</name>
+        <code>command = Control()
+command.throttle = 0
+command.brake = 1
+command.steer = 0
+self.globalNamespace.publishprius(command)</code>
+        <timestep>100</timestep>
+        <namespace>
+          <functions></functions>
+          <variables></variables>
+        </namespace>
+        <transition id="2">
+          <type>0</type>
+          <time>5000</time>
+          <posx>1014.0</posx>
+          <posy>769.0</posy>
+          <name>wait_5_sec</name>
+          <originid>4</originid>
+          <destinationid>5</destinationid>
+          <code></code>
+        </transition>
+      </state>
+      <state id="5" initial="False">
+        <posx>1078.0</posx>
+        <posy>846.0</posy>
+        <name>follow_race_track</name>
+        <code>throttle = self.namespace.calculate_throttle(10)
+steer = self.namespace.calculate_steer()
+command = Control()
+command.throttle = throttle
+command.brake = 0
+command.steer = steer
+self.globalNamespace.publishprius(command)</code>
+        <timestep>100</timestep>
+        <namespace>
+          <functions></functions>
+          <variables></variables>
+        </namespace>
+        <state id="6" initial="True">
+          <posx>942.0</posx>
+          <posy>818.0</posy>
+          <name>Forward</name>
+          <code>command = Control()
+command.throttle = 0.2
+command.brake = 0
+command.steer = 0
+self.globalNamespace.publishprius(command)</code>
+          <timestep>100</timestep>
+          <namespace>
+            <functions></functions>
+            <variables></variables>
+          </namespace>
+          <transition id="5">
+            <type>0</type>
+            <time>6000</time>
+            <posx>941.5</posx>
+            <posy>890.5</posy>
+            <name>turn_right</name>
+            <originid>6</originid>
+            <destinationid>7</destinationid>
+            <code></code>
+          </transition>
+        </state>
+        <state id="7" initial="False">
+          <posx>943.0</posx>
+          <posy>962.0</posy>
+          <name>SteerRight</name>
+          <code>command = Control()
+command.throttle = 0.2
+command.brake = 0
+command.steer = -0.6
+self.globalNamespace.publishprius(command)</code>
+          <timestep>100</timestep>
+          <namespace>
+            <functions></functions>
+            <variables></variables>
+          </namespace>
+        </state>
+      </state>
+    </state>
+  </state>
+</VisualStates>

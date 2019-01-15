@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- Console launch prefix -->
+  <arg name="launch_prefix" default=""/>
+  <arg name="model" default="$(find prius_description)/urdf/prius.urdf"/>
+  <param name="robot_description" textfile="$(arg model)"/>
+  
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="verbose" value="true"/>
+    <arg name="world_name" value="$(find prius_gazebo)/worlds/prius_crossing.world"/>
+  </include>
+  
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -x 1.5 -y -37 -z 0 -R 0 -P 0 -Y 1.57 -model prius"/>
+
+</launch>

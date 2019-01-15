@@ -9,7 +9,8 @@ VisualStates is a tool for programming robot behaviors using automata. It combin
 2. [BumpAndGo](/bumpAndGo)
 3. [ToyotaPriusSpawn](/priusSpawn)
 4. [ToyotaPriusObstacleAvoidance](/priusObstacleAvoidance)
+5. [ToyotaPriusCrossing](/prius_crossing)
 <p align="center">
-  <img src="Videos/PriusObstacleAvoid.gif">
+  <img src="media/PriusObstacleAvoid.gif">
 </p>
 ---

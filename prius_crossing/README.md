@@ -1,12 +1,12 @@
 # Prius Crossing
-The following example in VisualStates demonstrates the Prius Toyota Car behavior at a crossing in Gazebo 8 developed through ROS Kinetic. The following examples illustrates the several functionalities of the tool. The example starts with prius off-road and further through stop sign the car stops for a particular amount of time. Further takes a turn and gets on highway.
+The following example in VisualStates demonstrates the Prius Toyota Car behavior at a crossing in Gazebo 8 developed through ROS Kinetic. The following examples illustrates the several functionalities of the tool. The example starts with prius on-road, detects stop sign, waits for a person to cross and then makes a right turn. The stop sign is detected through image processing techniques using prius's camera sensor. Throttle and steer controller is also implemented to maintain the speed of the vehicle and steering wheel of the vehicle according to the direction of lanes using Lane Detection algorithm. 
 
 ## Steps to run the example
 ### Dependencies
 We assume that you already installed ROS Kinetic and Gazebo 8 on Ubuntu 16.04 system to be able to test the behaviors. However, if you did not install yet, you can do so following these pages: [http://wiki.ros.org/kinetic/Installation/Ubuntu](http://wiki.ros.org/kinetic/Installation/Ubuntu)  [http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)
 
 ### ROS Package Generation
-1. Copy Prius messages, world, description packages from [PriusData](/prius) and paste it in the ROS Workshop. Also clone the VisualStates package and copy the VisualStates prius_example.xml file which contains the example behavior.
+1. Copy Prius messages, world, description packages from [PriusData](/prius) and paste it in the ROS Workshop. Also clone the VisualStates package and copy the VisualStates prius_crossing.xml file which contains the crossing behavior.
 ```
 mkdir catkin_ws
 cd catkin_ws
@@ -18,12 +18,8 @@ cp -r <path_to_visualstates_examples>/prius_crossing/* .
 cd ..
 ```
 
-2. The example also requires the darknet_ros package which would run Yolo v3 on darknet compatible with ROS or OpenCV Apps Ros package. Further compile all the ROS packages and source the workspace.
+2. The example requires opencv installed as 
 ```
-cd src
-git clone https://github.com/leggedrobotics/darknet_ros.git
-OR
-sudo apt-get install ros-kinetic-opencv-apps
 cd ..
 catkin_make
 source devel/setup.bash

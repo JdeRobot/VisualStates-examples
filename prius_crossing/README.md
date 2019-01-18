@@ -3,7 +3,7 @@ The following example in VisualStates demonstrates the Prius Toyota Car behavior
 
 ## Steps to run the example
 ### Dependencies
-We assume that you already installed ROS Kinetic and Gazebo 8 on Ubuntu 16.04 system to be able to test the behaviors. However, if you did not install yet, you can do so following these pages: [http://wiki.ros.org/kinetic/Installation/Ubuntu](http://wiki.ros.org/kinetic/Installation/Ubuntu)  [http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)
+We assume that you already installed ROS Kinetic and Gazebo 9 on Ubuntu 16.04 system to be able to test the behaviors. However, if you did not install yet, you can do so following these pages: [http://wiki.ros.org/kinetic/Installation/Ubuntu](http://wiki.ros.org/kinetic/Installation/Ubuntu)  [http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)
 
 ### ROS Package Generation
 1. Copy Prius messages, world, description packages from [PriusData](/prius) and paste it in the ROS Workshop. Also clone the VisualStates package and copy the VisualStates prius_crossing.xml file which contains the crossing behavior.

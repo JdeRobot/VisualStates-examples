@@ -136,10 +136,8 @@ def calculate_steer_lane(self):
 	&quot;&quot;&quot;
 	Proportional Steer based on Lane Detected using Front Camera
 	&quot;&quot;&quot;
-	slopes = self.get_line_slope()
-	print(slopes)
-	error = 1 - abs(slopes[0])
-	p = 0.1 * error
+	slopes = self.get_line_slope() # 0, -1, 1, -2, 2 
+	p = 0
 	if p &gt; 1: return 1
 	elif p &lt; -1: return -1
 	else: return p
@@ -209,9 +207,9 @@ def is_stop_sign(self):
 	Simple Color Thresholding based Stop Sign Detection
 	&quot;&quot;&quot;
 	right_laser = self.globalNamespace.prius_front_right_laser_scan
-	right_front_ranges = np.array(self.getRangesForAngle(210, 240, right_laser))
+	right_front_ranges = np.array(self.getRangesForAngle(180, 240, right_laser))
 	
-	if (right_front_ranges &lt; 10).any():
+	if (right_front_ranges &lt; 4).any():
 		self.is_stop = True
 		return
 	self.is_stop = False
@@ -286,9 +284,9 @@ self.globalNamespace.publishprius(command)</code>
         </namespace>
         <transition id="7">
           <type>0</type>
-          <time>8150</time>
-          <posx>1042.5</posx>
-          <posy>898.0</posy>
+          <time>6680</time>
+          <posx>1041.5</posx>
+          <posy>897.0</posy>
           <name>turning</name>
           <originid>5</originid>
           <destinationid>8</destinationid>
@@ -310,7 +308,7 @@ self.globalNamespace.publishprius(command)</code>
           </namespace>
           <transition id="5">
             <type>0</type>
-            <time>5700</time>
+            <time>4100</time>
             <posx>941.5</posx>
             <posy>890.5</posy>
             <name>turn_right</name>
@@ -326,7 +324,7 @@ self.globalNamespace.publishprius(command)</code>
           <code>command = Control()
 command.throttle = 0.2
 command.brake = 0
-command.steer = -0.7
+command.steer = -0.78
 self.globalNamespace.publishprius(command)</code>
           <timestep>100</timestep>
           <namespace>
@@ -344,7 +342,7 @@ steer = self.namespace.calculate_steer_lane()
 command = Control()
 command.throttle = throttle
 command.brake = 0
-command.steer = steer
+command.steer = 0
 self.globalNamespace.publishprius(command)</code>
         <timestep>100</timestep>
         <namespace>

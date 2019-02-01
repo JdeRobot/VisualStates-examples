@@ -3,16 +3,14 @@ The following example in VisualStates demonstrates the Prius Toyota Car Obstacle
 
 ## Steps to run the example
 ### Dependencies
-We assume that you already installed ROS Kinetic and Gazebo 8 on Ubuntu 16.04 system to be able to test the behaviors. However, if you did not install yet, you can do so following these pages: [http://wiki.ros.org/kinetic/Installation/Ubuntu](http://wiki.ros.org/kinetic/Installation/Ubuntu)  [http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)
+* We assume that you already installed ROS Kinetic and Gazebo 8 on Ubuntu 16.04 system to be able to test the behaviors. However, if you did not install yet, you can do so following these pages: [http://wiki.ros.org/kinetic/Installation/Ubuntu](http://wiki.ros.org/kinetic/Installation/Ubuntu)  [http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)
+* We assume you have created a ROS Workspace, cloned the latest release of VisualStates, compiled and sourced the workspace.
 
 ### ROS Package Generation
-1. Copy Prius messages, world, description packages from [PriusData](/priusData) and paste it in the ROS Workshop. Also clone the VisualStates package and copy the VisualStates prius_obstacle_avoidance.xml file which contains the example behavior.
+1. Copy Prius messages, world, description packages from [Prius](/prius) and paste it in your ROS Workshop. Also copy the pre-developed VisualStates XML File. In our case lets name it catkin_ws.
 ```
-mkdir catkin_ws
 cd catkin_ws
-mkdir src
 cd src
-git clone https://github.com/JdeRobot/VisualStates.git
 cp -r <path_to_visualstates_examples>/prius/* .
 cp -r <path_to_visualstates_examples>/priusObstacleAvoidance/* .
 cd ..

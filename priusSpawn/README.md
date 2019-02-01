@@ -3,28 +3,20 @@ The following example in VisualStates demonstrates the Prius Toyota Car Spawn be
 
 ## Steps to run the example
 ### Dependencies
-We assume that you already installed ROS Kinetic and Gazebo 9 on Ubuntu 16.04 system to be able to test the behaviors. However, if you did not install yet, you can do so following these pages: [http://wiki.ros.org/kinetic/Installation/Ubuntu](http://wiki.ros.org/kinetic/Installation/Ubuntu)  [http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)
+* We assume that you already installed ROS Kinetic and Gazebo 9 on Ubuntu 16.04 system to be able to test the behaviors. However, if you did not install yet, you can do so following these pages: [http://wiki.ros.org/kinetic/Installation/Ubuntu](http://wiki.ros.org/kinetic/Installation/Ubuntu)  [http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)
+* We assume you have created a ROS Workspace, cloned the latest release of VisualStates, compiled and sourced the workspace.
 
 ### ROS Package Generation
-1. Copy Prius messages, world, description packages from [PriusData](/PriusData) and paste it in your ROS Workshop. Also copy the pre-developed VisualStates XML File.
+1. Copy Prius messages, world, description packages from [Prius](/prius) and paste it in your ROS Workshop. Also copy the pre-developed VisualStates XML File. In our case lets name it catkin_ws.
 ```
-mkdir catkin_ws
 cd catkin_ws
-mkdir src
 cd src
-cp -r <path_to_visualstates_examples>/priusData/* .
+cp -r <path_to_visualstates_examples>/prius/* .
 cp -r <path_to_visualstates_examples>/priusSpawn/* .
 cd ..
 ```
 
-2. Copy VisualStates package or clone it to the workspace, compile and source the package.
-```
-git clone https://github.com/JdeRobot/VisualStates.git
-catkin_make
-source devel/setup.bash
-```
-
-3. Generate the ROS Package of the behavior using the **visualstates**.
+2. Generate the ROS Package of the behavior using the **visualstates**.
 ```
 rosrun visualstates main.py <path_to_ros_workspace>/src/prius_spawn/prius_spawn.xml
 

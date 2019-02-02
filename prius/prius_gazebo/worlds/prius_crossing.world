@@ -355,6 +355,47 @@
         <projection_type>perspective</projection_type>
       </camera>
     </gui>
+    <model name="ground">
+		<static>1</static>
+		<link name="link">
+			<collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+			<geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/LightGray</name>
+            </script>
+          </material>
+        </visual>
+		</link>
+		<pose frame=''>0 0 -0.01 0 0 0</pose>
+    </model>
     <model name='stop'>
       <static>1</static>
       <link name='link'>
@@ -382,7 +423,7 @@
         <visual name='visual'>
           <geometry>
             <mesh>
-              <uri>model://stopW/meshes/stop.dae</uri>
+              <uri>model://stopW/meshes/stop2.dae</uri>
             </mesh>
           </geometry>
         </visual>

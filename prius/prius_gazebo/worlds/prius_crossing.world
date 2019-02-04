@@ -173,7 +173,7 @@
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
-      <pose frame=''>-6.70955 22.4524 0 0 -0 0</pose>
+      <pose frame=''>-8 22 0 0 -0 0</pose>
     </model>
     <model name='House 3_0'>
       <static>1</static>
@@ -220,7 +220,7 @@
         <enable_wind>0</enable_wind>
         <kinematic>0</kinematic>
       </link>
-      <pose frame=''>-6 31.456 0 0 -0 0</pose>
+      <pose frame=''>-8 31 0 0 -0 0</pose>
     </model>
     <model name='school'>
       <static>1</static>

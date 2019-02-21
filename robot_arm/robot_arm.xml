@@ -9,7 +9,8 @@
     <functions>def increment_y(self):
 	self.y = self.y + 50</functions>
     <variables>self.img = np.full((300,300,3), 255, np.uint8)
-self.y = 120</variables>
+self.y = 120
+self.color = (0,0,0)</variables>
   </global_namespace>
   <libraries>
     <library>numpy as np</library>
@@ -44,7 +45,7 @@ self.y = 120</variables>
     (self.namespace.x, self.globalNamespace.y),
     cv2.FONT_HERSHEY_SIMPLEX,
     1,
-    (0,255,255),
+    self.globalNamespace.color,
     2)
 cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
         <timestep>100</timestep>
@@ -71,7 +72,7 @@ cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
     (self.namespace.x, self.globalNamespace.y),
     cv2.FONT_HERSHEY_SIMPLEX,
     1,
-    (0,255,255),
+    self.globalNamespace.color,
     2)
 cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
         <timestep>100</timestep>
@@ -98,7 +99,7 @@ cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
     (self.namespace.x, self.globalNamespace.y),
     cv2.FONT_HERSHEY_SIMPLEX,
     1,
-    (0,255,255),
+    self.globalNamespace.color,
     2)
 cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
         <timestep>100</timestep>
@@ -125,7 +126,7 @@ cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
     (self.namespace.x, self.globalNamespace.y),
     cv2.FONT_HERSHEY_SIMPLEX,
     1,
-    (0,255,255),
+    self.globalNamespace.color,
     2)
 cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
         <timestep>100</timestep>
@@ -152,7 +153,7 @@ cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
     (self.namespace.x, self.globalNamespace.y),
     cv2.FONT_HERSHEY_SIMPLEX,
     1,
-    (0,255,255),
+    self.globalNamespace.color,
     2)
 cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
         <timestep>100</timestep>
@@ -179,7 +180,7 @@ cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
     (self.namespace.x, self.globalNamespace.y),
     cv2.FONT_HERSHEY_SIMPLEX,
     1,
-    (0,255,255),
+    self.globalNamespace.color,
     2)
 cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
         <timestep>100</timestep>
@@ -206,7 +207,7 @@ cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
     (self.namespace.x, self.globalNamespace.y),
     cv2.FONT_HERSHEY_SIMPLEX,
     1,
-    (0,255,255),
+    self.globalNamespace.color,
     2)
 cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
         <timestep>100</timestep>
@@ -233,7 +234,7 @@ cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
     (self.namespace.x, self.globalNamespace.y),
     cv2.FONT_HERSHEY_SIMPLEX,
     1,
-    (0,255,255),
+    self.globalNamespace.color,
     2)
 cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
         <timestep>100</timestep>
@@ -251,7 +252,7 @@ cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
     (140, self.globalNamespace.y),
     cv2.FONT_HERSHEY_SIMPLEX,
     1,
-    (0,255,255),
+    self.globalNamespace.color,
     2)
 cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
       <timestep>100</timestep>
@@ -299,7 +300,7 @@ cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
     (self.namespace.x, self.globalNamespace.y),
     cv2.FONT_HERSHEY_SIMPLEX,
     1,
-    (0,255,255),
+    self.globalNamespace.color,
     2)
 cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
         <timestep>100</timestep>
@@ -326,7 +327,7 @@ cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
     (self.namespace.x, self.globalNamespace.y),
     cv2.FONT_HERSHEY_SIMPLEX,
     1,
-    (0,255,255),
+    self.globalNamespace.color,
     2)
 cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
         <timestep>100</timestep>
@@ -353,7 +354,7 @@ cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
     (self.namespace.x, self.globalNamespace.y),
     cv2.FONT_HERSHEY_SIMPLEX,
     1,
-    (0,255,255),
+    self.globalNamespace.color,
     2)
 cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
         <timestep>100</timestep>
@@ -380,7 +381,7 @@ cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
     (self.namespace.x, self.globalNamespace.y),
     cv2.FONT_HERSHEY_SIMPLEX,
     1,
-    (0,255,255),
+    self.globalNamespace.color,
     2)
 cv2.imshow(&quot;img&quot;,self.globalNamespace.img)</code>
         <timestep>100</timestep>

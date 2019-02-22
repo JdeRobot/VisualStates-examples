@@ -10,6 +10,5 @@
     <arg name="world_name" value="$(find prius_gazebo)/worlds/prius_crossing.world"/>
   </include>
   
-  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -x 1.5 -y -37 -z 0 -R 0 -P 0 -Y 1.57 -model prius"/>
-
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -x 1.45 -y 25 -z 0 -R 0 -P 0 -Y -1.57 -model prius"/>
 </launch>

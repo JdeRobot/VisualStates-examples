@@ -20,8 +20,10 @@ add_library(PriusHybridPlugin SHARED plugins/PriusHybridPlugin.cc include/PriusH
 
 target_link_libraries(PriusHybridPlugin ${GAZEBO_LIBRARIES})
 
+add_library(ActorCollisionsPlugin SHARED plugins/ActorCollisionsPlugin.cc)
 add_library(gazebo_ros_block_laser SHARED plugins/gazebo_ros_block_laser.cpp include/gazebo_ros_block_laser.h)
 target_link_libraries(gazebo_ros_block_laser ${GAZEBO_LIBRARIES})
+target_link_libraries(ActorCollisionsPlugin ${GAZEBO_LIBRARIES})
 
 install(TARGETS PriusHybridPlugin gazebo_ros_block_laser
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}

@@ -1,22 +1,20 @@
 <?xml version="1.0" ?>
-<sdf version="1.6">
-  <model name="mcity">
+<sdf version="1.5">
+  <model name="Road_Stop">
     <static>true</static>
     <link name="link">
       <collision name="collision">
         <geometry>
-          <mesh>
-            <scale>0.254 0.254 0.254</scale>
-            <uri>model://mcity/meshes/mcity.obj</uri>
-          </mesh>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>100 100</size>
+          </plane>
         </geometry>
       </collision>
-
       <visual name="visual">
         <geometry>
           <mesh>
-            <scale>0.254 0.254 0.254</scale>
-            <uri>model://mcity/meshes/mcity.obj</uri>
+	    <uri>model://Road_Stop/meshes/stop2.dae</uri>
           </mesh>
         </geometry>
       </visual>

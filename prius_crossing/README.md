@@ -1,5 +1,5 @@
 # Prius Crossing
-The following example in VisualStates demonstrates the Prius Toyota Car behavior at a crossing in Gazebo 8 developed through ROS Kinetic. The following examples illustrates the several functionalities of the tool. The example starts with prius on-road, detects stop sign, waits for a person to cross and then makes a right turn. The stop sign is detected through image processing techniques using prius's camera sensor. Throttle and steer controller is also implemented to maintain the speed of the vehicle and steering wheel of the vehicle according to the direction of lanes using Lane Detection algorithm. 
+The following example in VisualStates demonstrates the Prius Toyota Car behavior at a crossing in Gazebo 9 developed through ROS Kinetic. The following examples illustrates the several functionalities of the tool. The example starts with prius on-road, waits for a person to cross, detects speed-limit sign,  and then makes a left turn. The Prius car follows the road maintaining steer, break and throttle based on vision and control algorithm. The vision algorithm detects the lane in the camera using a pipeline of HSV color filteration followed by a P controller for steer and throttle control. Video Demo: [Prius Crossing](https://www.youtube.com/watch?v=QHVAIJ88pQc)
 
 ## Steps to run the example
 ### Dependencies

@@ -34,15 +34,22 @@
       </include>
       <include>
           <uri>model://stop_sign</uri>
+          <name>Stop Sign 1</name>
           <pose>29 -3.5 0 0 0 -1.54</pose>
+      </include>
+      <include>
+          <uri>model://stop_sign</uri>
+          <name>Stop Sign 2</name>
+          <pose>-29 -3.5 0 0 0 1.9</pose>
       </include>
       <include>
           <uri>model://speed_limit_sign</uri>
           <pose>3.5 5.6 0 0 0 0</pose>
       </include>
+
       <gui>
         <camera name='user_camera'>
-          <pose>0 0 0 0 0 0</pose>
+          <pose>24 -27 16 0 0.3 2.2</pose>
         </camera>
       </gui>
    </world>

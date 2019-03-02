@@ -58,7 +58,8 @@
 	elif p &lt; -1: return -1
 	else: return p</functions>
     <variables>self.human_crossed = False
-self.turned_left = False</variables>
+self.turned_left = False
+self.turned_right = False</variables>
   </global_namespace>
   <libraries>
     <library>numpy as np</library>
@@ -102,18 +103,12 @@ def calculate_steer_lane(self):
 	&quot;&quot;&quot;
 	Proportional Steer based on Lane Detected using Front Camera
 	&quot;&quot;&quot;
-	error = self.get_steer_error()
-	e = 157 - error
+	e = 157 - self.get_steer_error() # 157 - Center Of ROI Frame
 	Kp = -0.05
 	p = Kp * e
 	if p &gt; 1: return 1
 	elif p &lt; -1: return -1
 	else: return p
-
-def distance(self, x, y):
-	import math
-	dist = math.sqrt(x ** 2 + y ** 2)
-	return dist
 	
 def get_steer_error(self):
 	'''
@@ -145,7 +140,10 @@ def get_steer_error(self):
 		cv2.line(front_image, (center_x, center_y), (cX, cY), (255,10,255), 2)
 		errorX = cX - center_x
 		errorY = cY - center_y
-		error = self.distance(errorX, errorY)
+		import math
+		error = math.sqrt(errorX ** 2 + errorY ** 2)
+	else:
+		error = 157
 	cv2.imshow(&quot;lanelines&quot;, front_image)
 	return error
 
@@ -154,8 +152,10 @@ def is_human_laser(self):
 	Obstacle Detection using Laser Data
 	&quot;&quot;&quot;
 	left_laser = self.globalNamespace.prius_front_left_laser_scan
+	right_laser = self.globalNamespace.prius_front_right_laser_scan
+	right_front_ranges = np.array(self.getRangesForAngle(120, 180, right_laser))
 	left_front_ranges = np.array(self.getRangesForAngle(0, 60, left_laser))
-	if (left_front_ranges &lt; 2).any():
+	if (left_front_ranges &lt; 4).any() or (right_front_ranges &lt; 4).any():
 		self.is_human = True
 		return
 	self.is_human = False
@@ -165,9 +165,10 @@ def stop_sign(self):
 	Obstacle Detection using Laser Data
 	&quot;&quot;&quot;
 	right_laser = self.globalNamespace.prius_front_right_laser_scan
+	left_laser = self.globalNamespace.prius_front_left_laser_scan
 	right_front_ranges = np.array(self.getRangesForAngle(180, 240, right_laser))
-	mini = min(right_front_ranges)
-	if(mini &lt; 4).any():
+	left_front_ranges = np.array(self.getRangesForAngle(0, 80, left_laser))
+	if(left_front_ranges &lt; 4).any() or (right_front_ranges &lt; 4).any():
 		self.is_stop_sign = True
 		return
 	self.is_stop_sign = False
@@ -179,24 +180,17 @@ def turn_sign(self):
 	left_laser = self.globalNamespace.prius_front_left_laser_scan
 	left_front_ranges = np.array(self.getRangesForAngle(60, 120, left_laser))
 	if (left_front_ranges &lt; 4).any():
-		self.is_turn = True
+		self.is_turn_left = True
 		return
-	self.is_turn = False
-	
-	
-
-	
-	
-	
-	
-	</functions>
+	self.is_turn_left = False</functions>
       <variables>self.is_human = False
 self.is_stop_sign = False
-self.is_turn = False</variables>
+self.is_turn_left = False
+self.is_turn_right = False</variables>
     </namespace>
     <state id="1" initial="True">
-      <posx>894.0</posx>
-      <posy>976.0</posy>
+      <posx>897.0</posx>
+      <posy>972.0</posy>
       <name>stay_on_road</name>
       <code>throttle = self.globalNamespace.calculate_throttle(10)
 steer = self.namespace.calculate_steer_lane()
@@ -225,8 +219,7 @@ return self.namespace.is_human and not self.globalNamespace.human_crossed
       <transition id="9">
         <type>1</type>
         <condition>self.namespace.stop_sign()
-return self.namespace.is_stop_sign and self.globalNamespace.turned_left
-</condition>
+return self.namespace.is_stop_sign and (self.globalNamespace.turned_left or self.globalNamespace.turned_right)</condition>
         <posx>895.0</posx>
         <posy>1060.5</posy>
         <name>is_stop_sign</name>
@@ -237,12 +230,23 @@ return self.namespace.is_stop_sign and self.globalNamespace.turned_left
       <transition id="13">
         <type>1</type>
         <condition>self.namespace.turn_sign()
-return self.namespace.is_turn and self.globalNamespace.human_crossed</condition>
+return self.namespace.is_turn_right and self.globalNamespace.human_crossed</condition>
         <posx>1023.0</posx>
         <posy>920.0</posy>
-        <name>wait_for_turn</name>
+        <name>wait_for_right</name>
         <originid>1</originid>
         <destinationid>3</destinationid>
+        <code></code>
+      </transition>
+      <transition id="16">
+        <type>1</type>
+        <condition>self.namespace.turn_sign()
+return self.namespace.is_turn_left and self.globalNamespace.human_crossed</condition>
+        <posx>784.5</posx>
+        <posy>925.0</posy>
+        <name>wait_for_left</name>
+        <originid>1</originid>
+        <destinationid>10</destinationid>
         <code></code>
       </transition>
     </state>
@@ -252,7 +256,7 @@ return self.namespace.is_turn and self.globalNamespace.human_crossed</condition>
       <name>wait_to_cross</name>
       <code>command = Control()
 command.throttle = 0
-command.brake = 0.6
+command.brake = 1
 command.steer = 0
 self.globalNamespace.prius(command)
 from cv_bridge import CvBridge
@@ -280,7 +284,7 @@ return not self.namespace.is_human</condition>
     <state id="3" initial="False">
       <posx>1142.0</posx>
       <posy>978.0</posy>
-      <name>turn_left</name>
+      <name>turn_right</name>
       <code>from cv_bridge import CvBridge
 bridge = CvBridge()
 front_image = bridge.imgmsg_to_cv2(self.globalNamespace.prius_front_camera_image_raw, &quot;bgr8&quot;)
@@ -298,7 +302,7 @@ cv2.imshow(&quot;lanelines&quot;, front_image)</code>
         <name>road_align</name>
         <originid>3</originid>
         <destinationid>1</destinationid>
-        <code>self.globalNamespace.turned_left = True</code>
+        <code>self.globalNamespace.turned_right = True</code>
       </transition>
       <state id="8" initial="True">
         <posx>994.0</posx>
@@ -320,7 +324,7 @@ self.globalNamespace.prius(command)</code>
           <time>3300</time>
           <posx>993.5</posx>
           <posy>988.0</posy>
-          <name>turn_left</name>
+          <name>turn_right</name>
           <originid>8</originid>
           <destinationid>9</destinationid>
           <code></code>
@@ -329,12 +333,12 @@ self.globalNamespace.prius(command)</code>
       <state id="9" initial="False">
         <posx>993.0</posx>
         <posy>1061.0</posy>
-        <name>left</name>
+        <name>right</name>
         <code>throttle = self.globalNamespace.calculate_throttle(10)
 command = Control()
 command.throttle = throttle
 command.brake = 0
-command.steer = 0.6
+command.steer = -0.6
 self.globalNamespace.prius(command)</code>
         <timestep>100</timestep>
         <namespace>
@@ -357,6 +361,72 @@ self.globalNamespace.prius(command)</code>
         <functions></functions>
         <variables></variables>
       </namespace>
+    </state>
+    <state id="10" initial="False">
+      <posx>672.0</posx>
+      <posy>973.0</posy>
+      <name>turn_left</name>
+      <code>from cv_bridge import CvBridge
+bridge = CvBridge()
+front_image = bridge.imgmsg_to_cv2(self.globalNamespace.prius_front_camera_image_raw, &quot;bgr8&quot;)
+cv2.imshow(&quot;lanelines&quot;, front_image)</code>
+      <timestep>100</timestep>
+      <namespace>
+        <functions></functions>
+        <variables></variables>
+      </namespace>
+      <transition id="18">
+        <type>0</type>
+        <time>6400</time>
+        <posx>784.5</posx>
+        <posy>1029.0</posy>
+        <name>road_align</name>
+        <originid>10</originid>
+        <destinationid>1</destinationid>
+        <code>self.globalNamespace.turned_left = True</code>
+      </transition>
+      <state id="11" initial="True">
+        <posx>1101.0</posx>
+        <posy>913.0</posy>
+        <name>forward</name>
+        <code>throttle = self.globalNamespace.calculate_throttle(10)
+command = Control()
+command.throttle = throttle
+command.brake = 0
+command.steer = 0
+self.globalNamespace.prius(command)</code>
+        <timestep>100</timestep>
+        <namespace>
+          <functions></functions>
+          <variables></variables>
+        </namespace>
+        <transition id="20">
+          <type>0</type>
+          <time>3200</time>
+          <posx>1102.0</posx>
+          <posy>989.5</posy>
+          <name>turn_left</name>
+          <originid>11</originid>
+          <destinationid>12</destinationid>
+          <code></code>
+        </transition>
+      </state>
+      <state id="12" initial="False">
+        <posx>1103.0</posx>
+        <posy>1066.0</posy>
+        <name>left</name>
+        <code>throttle = self.globalNamespace.calculate_throttle(10)
+command = Control()
+command.throttle = throttle
+command.brake = 0
+command.steer = 1
+self.globalNamespace.prius(command)</code>
+        <timestep>100</timestep>
+        <namespace>
+          <functions></functions>
+          <variables></variables>
+        </namespace>
+      </state>
     </state>
   </state>
 </VisualStates>

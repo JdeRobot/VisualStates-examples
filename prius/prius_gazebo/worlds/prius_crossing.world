@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+   <world name="default">
+     <include>
+        <uri>model://ground_plane</uri>
+     </include>
+      <include>
+         <uri>model://sun</uri>
+      </include>
+      <include>
+          <uri>model://Road_Stop</uri>
+          <pose>0 0 0.05 0 0 0</pose>
+      </include>
+      <include>
+          <uri>model://house_1</uri>
+          <name>House 1</name>
+          <pose>-10 10 0 0 0 0</pose>
+      </include>
+      <include>
+          <uri>model://house_1</uri>
+          <name>House 2</name>
+          <pose>-24 9 0 0 0 0</pose>
+      </include>
+      <include>
+          <uri>model://school</uri>
+          <pose>24 24 0 0 0 -0.6</pose>
+      </include>
+      <include>
+          <uri>model://gas_station</uri>
+          <pose>15 -11 0 0 0 0</pose>
+      </include>
+      <include>
+          <uri>model://actor</uri>
+      </include>
+      <include>
+          <uri>model://stop_sign</uri>
+          <name>Stop Sign 1</name>
+          <pose>29 -3.5 0 0 0 -1.54</pose>
+      </include>
+      <include>
+          <uri>model://stop_sign</uri>
+          <name>Stop Sign 2</name>
+          <pose>-29 -3.5 0 0 0 1.9</pose>
+      </include>
+      <include>
+          <uri>model://speed_limit_sign</uri>
+          <pose>3.5 5.6 0 0 0 0</pose>
+      </include>
+
+      <gui>
+        <camera name='user_camera'>
+          <pose>24 -27 16 0 0.3 2.2</pose>
+        </camera>
+      </gui>
+   </world>
+</sdf>

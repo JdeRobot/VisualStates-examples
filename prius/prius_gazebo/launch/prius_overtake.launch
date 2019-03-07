@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<launch>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="verbose" value="true"/>
+    <arg name="world_name" value="$(find prius_gazebo)/worlds/prius_overtake.world"/>
+  </include>
+
+  <group ns="prius_simulate">
+    <include file="$(find prius_gazebo)/launch/prius.launch">
+      <arg name="name" value="prius1"/>
+      <arg name="pos_x" value="155"/>
+      <arg name="pos_y" value="-4.5"/>
+      <arg name="pos_z" value="0"/>
+      <arg name="r" value="0"/>
+      <arg name="p" value="0"/>
+      <arg name="y" value="-3.14"/>
+    </include>
+  </group>
+
+  <group ns="prius_overtake">
+    <include file="$(find prius_gazebo)/launch/prius.launch">
+      <arg name="name" value="prius2"/>
+      <arg name="pos_x" value="170"/>
+      <arg name="pos_y" value="-4.5"/>
+      <arg name="pos_z" value="0"/>
+      <arg name="r" value="0"/>
+      <arg name="p" value="0"/>
+      <arg name="y" value="-3.14"/>
+    </include>
+  </group>
+
+</launch>

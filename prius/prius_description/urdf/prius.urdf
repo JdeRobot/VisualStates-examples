@@ -480,7 +480,6 @@
 
   <gazebo>
     <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
-      <!-- <robotNamespace>/prius</robotNamespace> -->
       <jointName>rear_right_wheel_joint, rear_left_wheel_joint, front_right_wheel_joint, front_left_wheel_joint, front_right_steer_joint, front_left_steer_joint, steering_joint</jointName>
       <updateRate>100.0</updateRate>
       <alwaysOn>true</alwaysOn>
@@ -489,7 +488,6 @@
 
   <gazebo>
     <plugin name="p3d" filename="libgazebo_ros_p3d.so">
-      <!-- <robotNamespace>/prius</robotNamespace> -->
       <bodyName>base_link</bodyName>
       <topicName>base_pose_ground_truth</topicName>
       <frameName>map</frameName>
@@ -520,7 +518,7 @@
         </range>
       </ray>
       <plugin name='center_laser' filename='libgazebo_ros_block_laser.so'>
-        <topicName>/prius/center_laser/scan</topicName>
+        <topicName>center_laser/scan</topicName>
         <frameName>center_laser_link</frameName>
       </plugin>
       <always_on>1</always_on>
@@ -552,7 +550,7 @@
         </range>
       </ray>
       <plugin name='front_left_laser' filename='libgazebo_ros_laser.so'>
-        <topicName>/prius/front_left_laser/scan</topicName>
+        <topicName>front_left_laser/scan</topicName>
         <frameName>front_left_laser_link</frameName>
       </plugin>
       <always_on>1</always_on>
@@ -584,7 +582,7 @@
         </range>
       </ray>
       <plugin name='front_right_laser' filename='libgazebo_ros_laser.so'>
-        <topicName>/prius/front_right_laser/scan</topicName>
+        <topicName>front_right_laser/scan</topicName>
         <frameName>front_right_laser_link</frameName>
       </plugin>
       <always_on>1</always_on>
@@ -616,9 +614,9 @@
       <plugin name="front_camera_controller" filename="libgazebo_ros_camera.so">
         <alwaysOn>false</alwaysOn>
         <updateRate>0.0</updateRate>
-        <cameraName>/prius/front_camera</cameraName>
+        <cameraName>front_camera</cameraName>
         <imageTopicName>image_raw</imageTopicName>
-        <cameraInfoTopicName>/prius/front_camera_info</cameraInfoTopicName>
+        <cameraInfoTopicName>front_camera_info</cameraInfoTopicName>
         <frameName>camera_link</frameName>
         <hackBaseline>0.07</hackBaseline>
         <distortionK1>0.0</distortionK1>
@@ -653,9 +651,9 @@
       <plugin name="back_camera_controller" filename="libgazebo_ros_camera.so">
         <alwaysOn>false</alwaysOn>
         <updateRate>0.0</updateRate>
-        <cameraName>/prius/back_camera</cameraName>
+        <cameraName>/back_camera</cameraName>
         <imageTopicName>image_raw</imageTopicName>
-        <cameraInfoTopicName>/prius/back_camera_info</cameraInfoTopicName>
+        <cameraInfoTopicName>/back_camera_info</cameraInfoTopicName>
         <frameName>camera_link</frameName>
         <hackBaseline>0.07</hackBaseline>
         <distortionK1>0.0</distortionK1>
@@ -690,9 +688,9 @@
       <plugin name="left_camera_controller" filename="libgazebo_ros_camera.so">
         <alwaysOn>false</alwaysOn>
         <updateRate>0.0</updateRate>
-        <cameraName>/prius/left_camera</cameraName>
+        <cameraName>/left_camera</cameraName>
         <imageTopicName>image_raw</imageTopicName>
-        <cameraInfoTopicName>/prius/left_camera_info</cameraInfoTopicName>
+        <cameraInfoTopicName>/left_camera_info</cameraInfoTopicName>
         <frameName>camera_link</frameName>
         <hackBaseline>0.07</hackBaseline>
         <distortionK1>0.0</distortionK1>
@@ -727,9 +725,9 @@
       <plugin name="right_camera_controller" filename="libgazebo_ros_camera.so">
         <alwaysOn>false</alwaysOn>
         <updateRate>0.0</updateRate>
-        <cameraName>/prius/right_camera</cameraName>
+        <cameraName>right_camera</cameraName>
         <imageTopicName>image_raw</imageTopicName>
-        <cameraInfoTopicName>/prius/right_camera_info</cameraInfoTopicName>
+        <cameraInfoTopicName>right_camera_info</cameraInfoTopicName>
         <frameName>camera_link</frameName>
         <hackBaseline>0.07</hackBaseline>
         <distortionK1>0.0</distortionK1>
@@ -765,7 +763,7 @@
         </range>
       </ray>
       <plugin name='back_left_far_sonar_sensor' filename='libgazebo_ros_range.so'>
-        <topicName>/prius/back_sonar/left_far_range</topicName>
+        <topicName>back_sonar/left_far_range</topicName>
         <frameName>back_left_far_sonar_link</frameName>
       </plugin>
       <always_on>false</always_on>
@@ -797,7 +795,7 @@
         </range>
       </ray>
       <plugin name='back_left_middle_sonar_sensor' filename='libgazebo_ros_range.so'>
-        <topicName>/prius/back_sonar/left_middle_range</topicName>
+        <topicName>back_sonar/left_middle_range</topicName>
         <frameName>back_left_middle_sonar_link</frameName>
       </plugin>
       <always_on>false</always_on>
@@ -829,7 +827,7 @@
         </range>
       </ray>
       <plugin name='back_right_far_sonar_sensor' filename='libgazebo_ros_range.so'>
-        <topicName>/prius/back_sonar/right_far_range</topicName>
+        <topicName>back_sonar/right_far_range</topicName>
         <frameName>back_right_far_sonar_link</frameName>
       </plugin>
       <always_on>false</always_on>
@@ -861,7 +859,7 @@
         </range>
       </ray>
       <plugin name='back_right_middle_sonar_sensor' filename='libgazebo_ros_range.so'>
-        <topicName>/prius/back_sonar/right_middle_range</topicName>
+        <topicName>back_sonar/right_middle_range</topicName>
         <frameName>back_right_middle_sonar_link</frameName>
       </plugin>
       <always_on>false</always_on>
@@ -893,7 +891,7 @@
         </range>
       </ray>
       <plugin name='front_left_far_sonar_sensor' filename='libgazebo_ros_range.so'>
-        <topicName>/prius/front_sonar/left_far_range</topicName>
+        <topicName>front_sonar/left_far_range</topicName>
         <frameName>front_left_far_sonar_link</frameName>
       </plugin>
       <always_on>false</always_on>
@@ -925,7 +923,7 @@
         </range>
       </ray>
       <plugin name='front_left_middle_sonar_sensor' filename='libgazebo_ros_range.so'>
-        <topicName>/prius/front_sonar/left_middle_range</topicName>
+        <topicName>front_sonar/left_middle_range</topicName>
         <frameName>front_left_middle_sonar_link</frameName>
       </plugin>
       <always_on>false</always_on>
@@ -957,7 +955,7 @@
         </range>
       </ray>
       <plugin name='front_right_far_sonar_sensor' filename='libgazebo_ros_range.so'>
-        <topicName>/prius/front_sonar/right_far_range</topicName>
+        <topicName>front_sonar/right_far_range</topicName>
         <frameName>front_right_far_sonar_link</frameName>
       </plugin>
       <always_on>false</always_on>
@@ -989,7 +987,7 @@
         </range>
       </ray>
       <plugin name='front_right_middle_sonar_sensor' filename='libgazebo_ros_range.so'>
-        <topicName>/prius/front_sonar/right_middle_range</topicName>
+        <topicName>front_sonar/right_middle_range</topicName>
         <frameName>front_right_middle_sonar_link</frameName>
       </plugin>
       <always_on>false</always_on>

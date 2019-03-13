@@ -114,7 +114,6 @@ def get_steer_error(self):
 	'''
 	Road Lane Detection
 	'''
-	error = 0
 	front_image = self.globalNamespace.prius_front_camera_image_raw
 	import cv2
 	from cv_bridge import CvBridge
@@ -137,7 +136,7 @@ def get_steer_error(self):
 		M = cv2.moments(contours[0])
 		cX = int(M[&quot;m10&quot;] / M[&quot;m00&quot;])
 		cY = int(M[&quot;m01&quot;] / M[&quot;m00&quot;])
-		cv2.drawContours(front_image, contours[0], -1, (255, 20, 255), 2)
+		cv2.drawContours(front_image, contours[0], 7, (255, 20, 255), 2)
 		cv2.line(front_image, (center_x, center_y), (cX, cY), (255,10,255), 2)
 		errorX = cX - center_x
 		errorY = cY - center_y

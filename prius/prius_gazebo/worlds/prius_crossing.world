@@ -35,7 +35,7 @@
       <include>
           <uri>model://stop_sign</uri>
           <name>Stop Sign 1</name>
-          <pose>29 -3.5 0 0 0 -1.54</pose>
+          <pose>29 3.5 0 0 0 -1.54</pose>
       </include>
       <include>
           <uri>model://stop_sign</uri>

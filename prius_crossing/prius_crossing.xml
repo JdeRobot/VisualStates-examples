@@ -1,0 +1,433 @@
+<?xml version="1.0" ?>
+<VisualStates>
+  <config>
+    <buildDependencies>
+      <dependency>rospy</dependency>
+      <dependency>sensor_msgs</dependency>
+      <dependency>geometry_msgs</dependency>
+      <dependency>prius_msgs</dependency>
+    </buildDependencies>
+    <runDependencies>
+      <dependency>rospy</dependency>
+      <dependency>sensor_msgs</dependency>
+      <dependency>geometry_msgs</dependency>
+      <dependency>prius_msgs</dependency>
+    </runDependencies>
+    <topics>
+      <topic id="0">
+        <methodname>prius</methodname>
+        <name>/prius</name>
+        <type>prius_msgs/Control</type>
+        <opType>Publish</opType>
+      </topic>
+      <topic id="1">
+        <variablename>prius_front_left_laser_scan</variablename>
+        <name>/prius/front_left_laser/scan</name>
+        <type>sensor_msgs/LaserScan</type>
+        <opType>Subscribe</opType>
+      </topic>
+      <topic id="2">
+        <variablename>prius_front_camera_image_raw</variablename>
+        <name>/prius/front_camera/image_raw</name>
+        <type>sensor_msgs/Image</type>
+        <opType>Subscribe</opType>
+      </topic>
+      <topic id="3">
+        <variablename>joint_states</variablename>
+        <name>/joint_states</name>
+        <type>sensor_msgs/JointState</type>
+        <opType>Subscribe</opType>
+      </topic>
+      <topic id="4">
+        <variablename>prius_front_right_laser_scan</variablename>
+        <name>/prius/front_right_laser/scan</name>
+        <type>sensor_msgs/LaserScan</type>
+        <opType>Subscribe</opType>
+      </topic>
+    </topics>
+  </config>
+  <global_namespace>
+    <functions>def calculate_throttle(self, desired_velocity):
+	&quot;&quot;&quot;
+	Proportional Throttle Controller
+	&quot;&quot;&quot;
+	feedback_velocity = np.average(np.array(self.joint_states.velocity[:4])) # 4 Wheels
+	error = desired_velocity - feedback_velocity
+	p = 0.01 * error
+	if p &gt; 1: return 1
+	elif p &lt; -1: return -1
+	else: return p</functions>
+    <variables>self.human_crossed = False
+self.turned_left = False
+self.turned_right = False</variables>
+  </global_namespace>
+  <libraries>
+    <library>numpy as np</library>
+    <library>cv2</library>
+  </libraries>
+  <state id="0" initial="True">
+    <posx>0.0</posx>
+    <posy>0.0</posy>
+    <name>root</name>
+    <code></code>
+    <timestep>100</timestep>
+    <namespace>
+      <functions>def getRangesForAngle(self, min_angle, max_angle, laser):
+	&quot;&quot;&quot;
+	Applies Angle Mask to Laser
+	&quot;&quot;&quot;
+	laser_ranges = enumerate(laser.ranges)
+	thresh = laser.angle_increment * 180 / 3.14
+	ranges = []
+	for k, g in enumerate(laser.ranges):
+		if k*thresh &gt; min_angle and k*thresh &lt; max_angle:
+			ranges.append(g)
+	return ranges
+
+def region_of_interest(self, img, vertices):
+	&quot;&quot;&quot;
+	Applies Image Mask to Image
+	&quot;&quot;&quot;
+	mask = np.zeros_like(img)
+	if len(img.shape) &gt; 2:
+		channel_count = img.shape[2]
+		ignore_mask_color = (255,) * channel_count
+	else:
+		ignore_mask_color = 255
+	
+	cv2.fillPoly(mask, vertices, ignore_mask_color)
+	masked_image = cv2.bitwise_and(img,mask)
+	return masked_image
+
+def calculate_steer_lane(self):
+	&quot;&quot;&quot;
+	Proportional Steer based on Lane Detected using Front Camera
+	&quot;&quot;&quot;
+	e = 157 - self.get_steer_error() # 157 - Center Of ROI Frame
+	Kp = -0.05
+	p = Kp * e
+	if p &gt; 1: return 1
+	elif p &lt; -1: return -1
+	else: return p
+	
+def get_steer_error(self):
+	'''
+	Road Lane Detection
+	'''
+	error = 0
+	front_image = self.globalNamespace.prius_front_camera_image_raw
+	import cv2
+	from cv_bridge import CvBridge
+	self.bridge = CvBridge()
+	front_image = self.bridge.imgmsg_to_cv2(front_image, &quot;bgr8&quot;)
+	vertices = np.array([[(320, 487), (295, 519), (246,513) ,(265, 489)]], dtype=np.int32)
+	roi_image = self.region_of_interest(front_image, vertices)
+	image_hsv = cv2.cvtColor(roi_image, cv2.COLOR_BGR2HSV)
+	image_mask = cv2.inRange(image_hsv, np.array([0,0,135]), np.array([10,10,215]))
+	kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (2, 2))
+	closing = cv2.morphologyEx(image_mask, cv2.MORPH_CLOSE, kernel)
+	opening = cv2.morphologyEx(closing, cv2.MORPH_OPEN, kernel)
+	dilation = cv2.dilate(opening, kernel, iterations=2)
+	dilation[dilation &lt; 240] = 0
+	_, contours, _ = cv2.findContours(dilation, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+	if contours:
+		contours = sorted(contours, key=cv2.contourArea, reverse=True)[:1]
+		center_x = image_mask.shape[0] / 2
+		center_y = image_mask.shape[1] / 2
+		M = cv2.moments(contours[0])
+		cX = int(M[&quot;m10&quot;] / M[&quot;m00&quot;])
+		cY = int(M[&quot;m01&quot;] / M[&quot;m00&quot;])
+		cv2.drawContours(front_image, contours[0], -1, (255, 20, 255), 2)
+		cv2.line(front_image, (center_x, center_y), (cX, cY), (255,10,255), 2)
+		errorX = cX - center_x
+		errorY = cY - center_y
+		import math
+		error = math.sqrt(errorX ** 2 + errorY ** 2)
+	else:
+		error = 157
+	cv2.imshow(&quot;lanelines&quot;, front_image)
+	return error
+
+def is_human_laser(self):
+	&quot;&quot;&quot;
+	Obstacle Detection using Laser Data
+	&quot;&quot;&quot;
+	left_laser = self.globalNamespace.prius_front_left_laser_scan
+	right_laser = self.globalNamespace.prius_front_right_laser_scan
+	right_front_ranges = np.array(self.getRangesForAngle(120, 180, right_laser))
+	left_front_ranges = np.array(self.getRangesForAngle(0, 60, left_laser))
+	if (left_front_ranges &lt; 4).any() or (right_front_ranges &lt; 4).any():
+		self.is_human = True
+		return
+	self.is_human = False
+
+def stop_sign(self):
+	&quot;&quot;&quot;
+	Obstacle Detection using Laser Data
+	&quot;&quot;&quot;
+	right_laser = self.globalNamespace.prius_front_right_laser_scan
+	left_laser = self.globalNamespace.prius_front_left_laser_scan
+	right_front_ranges = np.array(self.getRangesForAngle(180, 240, right_laser))
+	left_front_ranges = np.array(self.getRangesForAngle(0, 80, left_laser))
+	if(left_front_ranges &lt; 4).any() or (right_front_ranges &lt; 4).any():
+		self.is_stop_sign = True
+		return
+	self.is_stop_sign = False
+
+def turn_sign(self):
+	&quot;&quot;&quot;
+	Obstacle Detection using Laser Data
+	&quot;&quot;&quot;
+	left_laser = self.globalNamespace.prius_front_left_laser_scan
+	left_front_ranges = np.array(self.getRangesForAngle(60, 120, left_laser))
+	if (left_front_ranges &lt; 4).any():
+		self.is_turn_left = True
+		return
+	self.is_turn_left = False</functions>
+      <variables>self.is_human = False
+self.is_stop_sign = False
+self.is_turn_left = False
+self.is_turn_right = False</variables>
+    </namespace>
+    <state id="1" initial="True">
+      <posx>897.0</posx>
+      <posy>972.0</posy>
+      <name>stay_on_road</name>
+      <code>throttle = self.globalNamespace.calculate_throttle(10)
+steer = self.namespace.calculate_steer_lane()
+command = Control()
+command.throttle = throttle
+command.brake = 0
+command.steer = steer
+self.globalNamespace.prius(command)</code>
+      <timestep>100</timestep>
+      <namespace>
+        <functions></functions>
+        <variables></variables>
+      </namespace>
+      <transition id="1">
+        <type>1</type>
+        <condition>self.namespace.is_human_laser()
+return self.namespace.is_human and not self.globalNamespace.human_crossed
+</condition>
+        <posx>835.0</posx>
+        <posy>884.0</posy>
+        <name>is_human</name>
+        <originid>1</originid>
+        <destinationid>2</destinationid>
+        <code></code>
+      </transition>
+      <transition id="9">
+        <type>1</type>
+        <condition>self.namespace.stop_sign()
+return self.namespace.is_stop_sign and (self.globalNamespace.turned_left or self.globalNamespace.turned_right)</condition>
+        <posx>895.0</posx>
+        <posy>1060.5</posy>
+        <name>is_stop_sign</name>
+        <originid>1</originid>
+        <destinationid>7</destinationid>
+        <code></code>
+      </transition>
+      <transition id="13">
+        <type>1</type>
+        <condition>self.namespace.turn_sign()
+return self.namespace.is_turn_right and self.globalNamespace.human_crossed</condition>
+        <posx>1023.0</posx>
+        <posy>920.0</posy>
+        <name>wait_for_right</name>
+        <originid>1</originid>
+        <destinationid>3</destinationid>
+        <code></code>
+      </transition>
+      <transition id="16">
+        <type>1</type>
+        <condition>self.namespace.turn_sign()
+return self.namespace.is_turn_left and self.globalNamespace.human_crossed</condition>
+        <posx>784.5</posx>
+        <posy>925.0</posy>
+        <name>wait_for_left</name>
+        <originid>1</originid>
+        <destinationid>10</destinationid>
+        <code></code>
+      </transition>
+    </state>
+    <state id="2" initial="False">
+      <posx>896.0</posx>
+      <posy>808.0</posy>
+      <name>wait_to_cross</name>
+      <code>command = Control()
+command.throttle = 0
+command.brake = 1
+command.steer = 0
+self.globalNamespace.prius(command)
+from cv_bridge import CvBridge
+bridge = CvBridge()
+front_image = bridge.imgmsg_to_cv2(self.globalNamespace.prius_front_camera_image_raw, &quot;bgr8&quot;)
+cv2.imshow(&quot;lanelines&quot;, front_image)
+</code>
+      <timestep>100</timestep>
+      <namespace>
+        <functions></functions>
+        <variables></variables>
+      </namespace>
+      <transition id="11">
+        <type>1</type>
+        <condition>self.namespace.is_human_laser()
+return not self.namespace.is_human</condition>
+        <posx>956.5</posx>
+        <posy>882.0</posy>
+        <name>human_crossed</name>
+        <originid>2</originid>
+        <destinationid>1</destinationid>
+        <code>self.globalNamespace.human_crossed = True</code>
+      </transition>
+    </state>
+    <state id="3" initial="False">
+      <posx>1142.0</posx>
+      <posy>978.0</posy>
+      <name>turn_right</name>
+      <code>from cv_bridge import CvBridge
+bridge = CvBridge()
+front_image = bridge.imgmsg_to_cv2(self.globalNamespace.prius_front_camera_image_raw, &quot;bgr8&quot;)
+cv2.imshow(&quot;lanelines&quot;, front_image)</code>
+      <timestep>100</timestep>
+      <namespace>
+        <functions></functions>
+        <variables></variables>
+      </namespace>
+      <transition id="7">
+        <type>0</type>
+        <time>8400</time>
+        <posx>1023.5</posx>
+        <posy>1032.5</posy>
+        <name>road_align</name>
+        <originid>3</originid>
+        <destinationid>1</destinationid>
+        <code>self.globalNamespace.turned_right = True</code>
+      </transition>
+      <state id="8" initial="True">
+        <posx>994.0</posx>
+        <posy>915.0</posy>
+        <name>forward</name>
+        <code>throttle = self.globalNamespace.calculate_throttle(10)
+command = Control()
+command.throttle = throttle
+command.brake = 0
+command.steer = 0
+self.globalNamespace.prius(command)</code>
+        <timestep>100</timestep>
+        <namespace>
+          <functions></functions>
+          <variables></variables>
+        </namespace>
+        <transition id="15">
+          <type>0</type>
+          <time>3300</time>
+          <posx>993.5</posx>
+          <posy>988.0</posy>
+          <name>turn_right</name>
+          <originid>8</originid>
+          <destinationid>9</destinationid>
+          <code></code>
+        </transition>
+      </state>
+      <state id="9" initial="False">
+        <posx>993.0</posx>
+        <posy>1061.0</posy>
+        <name>right</name>
+        <code>throttle = self.globalNamespace.calculate_throttle(10)
+command = Control()
+command.throttle = throttle
+command.brake = 0
+command.steer = -0.6
+self.globalNamespace.prius(command)</code>
+        <timestep>100</timestep>
+        <namespace>
+          <functions></functions>
+          <variables></variables>
+        </namespace>
+      </state>
+    </state>
+    <state id="7" initial="False">
+      <posx>896.0</posx>
+      <posy>1158.0</posy>
+      <name>stop</name>
+      <code>command = Control()
+command.throttle = 0
+command.brake = 0.6
+command.steer = 0
+self.globalNamespace.prius(command)</code>
+      <timestep>100</timestep>
+      <namespace>
+        <functions></functions>
+        <variables></variables>
+      </namespace>
+    </state>
+    <state id="10" initial="False">
+      <posx>672.0</posx>
+      <posy>973.0</posy>
+      <name>turn_left</name>
+      <code>from cv_bridge import CvBridge
+bridge = CvBridge()
+front_image = bridge.imgmsg_to_cv2(self.globalNamespace.prius_front_camera_image_raw, &quot;bgr8&quot;)
+cv2.imshow(&quot;lanelines&quot;, front_image)</code>
+      <timestep>100</timestep>
+      <namespace>
+        <functions></functions>
+        <variables></variables>
+      </namespace>
+      <transition id="18">
+        <type>0</type>
+        <time>6400</time>
+        <posx>784.5</posx>
+        <posy>1029.0</posy>
+        <name>road_align</name>
+        <originid>10</originid>
+        <destinationid>1</destinationid>
+        <code>self.globalNamespace.turned_left = True</code>
+      </transition>
+      <state id="11" initial="True">
+        <posx>1101.0</posx>
+        <posy>913.0</posy>
+        <name>forward</name>
+        <code>throttle = self.globalNamespace.calculate_throttle(10)
+command = Control()
+command.throttle = throttle
+command.brake = 0
+command.steer = 0
+self.globalNamespace.prius(command)</code>
+        <timestep>100</timestep>
+        <namespace>
+          <functions></functions>
+          <variables></variables>
+        </namespace>
+        <transition id="20">
+          <type>0</type>
+          <time>3200</time>
+          <posx>1102.0</posx>
+          <posy>989.5</posy>
+          <name>turn_left</name>
+          <originid>11</originid>
+          <destinationid>12</destinationid>
+          <code></code>
+        </transition>
+      </state>
+      <state id="12" initial="False">
+        <posx>1103.0</posx>
+        <posy>1066.0</posy>
+        <name>left</name>
+        <code>throttle = self.globalNamespace.calculate_throttle(10)
+command = Control()
+command.throttle = throttle
+command.brake = 0
+command.steer = 1
+self.globalNamespace.prius(command)</code>
+        <timestep>100</timestep>
+        <namespace>
+          <functions></functions>
+          <variables></variables>
+        </namespace>
+      </state>
+    </state>
+  </state>
+</VisualStates>

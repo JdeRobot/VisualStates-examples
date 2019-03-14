@@ -5,8 +5,8 @@ VisualStates is a tool for programming robot behaviors using automata. It combin
 
 ---
 ### List of Examples -
-1. [ObstacleAvoidance](/obstacleAvoidance)
-2. [BumpAndGo](/bumpAndGo)
+1. [ObstacleAvoidance](/kobuki_obstacle_avoidance)
+2. [BumpAndGo](/kobuki_bump_and_go)
 3. [ToyotaPriusSpawn](/priusSpawn)
 4. [ToyotaPriusObstacleAvoidance](/priusObstacleAvoidance)
 5. [ToyotaPriusCrossing](/prius_crossing)

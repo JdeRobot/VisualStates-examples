@@ -11,8 +11,12 @@
     </include>
     <gui>
       <camera name='user_camera'>
-        <pose>24 -27 16 0 0.3 2.2</pose>
+        <pose>76 -33 18 0 0.3 0.7</pose>
       </camera>
     </gui>
+    <scene>
+      <ambient>1.0 1.0 1.0 1.0</ambient>
+      <shadows>0</shadows>
+    </scene>
   </world>
 </sdf>

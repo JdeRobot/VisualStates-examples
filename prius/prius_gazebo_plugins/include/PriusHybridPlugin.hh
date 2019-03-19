@@ -106,6 +106,7 @@ namespace gazebo
 
     /// \brief Private data
     private: std::unique_ptr<PriusHybridPluginPrivate> dataPtr;
+    private: std::string robot_namespace_;
   };
 }
 #endif

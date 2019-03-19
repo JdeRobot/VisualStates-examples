@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="name" default="prius"/>
+  <arg name="pos_x" default="0.0"/>
+  <arg name="pos_y" default="0.0"/>
+  <arg name="pos_z" default="0.0"/>
+  <arg name="r" default="0.0"/>
+  <arg name="p" default="0.0"/>
+  <arg name="y" default="0.0"/>
+  <arg name="model" default="$(find prius_description)/urdf/prius.urdf"/>
+  <param name="robot_description" textfile="$(arg model)"/>
+
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -x $(arg pos_x) -y $(arg pos_y) -z $(arg pos_z) -R $(arg r) -P $(arg p) -Y $(arg y) -model $(arg name)"/>
+</launch>

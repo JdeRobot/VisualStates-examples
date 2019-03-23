@@ -13,7 +13,8 @@ The following example in VisualStates demonstrates the Prius Toyota Car Overtake
 cd catkin_ws
 cd src
 cp -r <path_to_visualstates_examples>/prius/* .
-cp -r <path_to_visualstates_examples>/prius_overtake/* .
+cp -r <path_to_visualstates_examples>/prius_overtake/prius_overtake.xml .
+cp -r <path_to_visualstates_examples>/prius_simulate/prius_simulate.xml .
 cd ..
 ```
 

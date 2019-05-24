@@ -40,7 +40,7 @@ roscore
 ```
 Start the Gazebo simulator, using the gazebo_ros package
 ```
-rosrun gazebo_ros gazebo kobuki-simple-ros.world
+rosrun gazebo_ros gazebo kobuki_1_simpleROS.world
 ```
 Run our generated package
 ```

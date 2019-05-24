@@ -79,7 +79,7 @@ self.new_angle = 0</variables>
       <code>velCommand = Twist()
 velCommand.linear.x = 0.5
 velCommand.angular.z = 0.0
-self.globalNamespace.publishturtlebotROS_mobile_base_commands_velocity(velCommand)</code>
+self.globalNamespace.turtlebotROS_mobile_base_commands_velocity(velCommand)</code>
       <timestep>100</timestep>
       <namespace>
         <functions></functions>
@@ -104,7 +104,7 @@ return self.namespace.is_obstacle</condition>
       <code>velCommand = Twist()
 velCommand.linear.x = -0.5
 velCommand.angular.z = 0.0
-self.globalNamespace.publishturtlebotROS_mobile_base_commands_velocity(velCommand)</code>
+self.globalNamespace.turtlebotROS_mobile_base_commands_velocity(velCommand)</code>
       <timestep>100</timestep>
       <namespace>
         <functions></functions>
@@ -128,7 +128,7 @@ self.globalNamespace.publishturtlebotROS_mobile_base_commands_velocity(velComman
       <code>velCommand = Twist()
 velCommand.linear.x = 0.0
 velCommand.angular.z = 0.2 # Move always CCW
-self.globalNamespace.publishturtlebotROS_mobile_base_commands_velocity(velCommand)</code>
+self.globalNamespace.turtlebotROS_mobile_base_commands_velocity(velCommand)</code>
       <timestep>100</timestep>
       <namespace>
         <functions></functions>

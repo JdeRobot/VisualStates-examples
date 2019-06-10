@@ -1,6 +1,10 @@
 # Prius Spawn Behavior
 The following example in VisualStates demonstrates the Prius Toyota Car Spawn behavior in Gazebo 9 developed through ROS Kinetic. The behavior consists of 1 parent state with 4 child states. The parent state `SpawnPrius` contains 4 child states - `SteerLeft`, `SteerRight`, `MoveForward`, `Stop`.
 
+<p align="center">
+  <img src="prius_spawn.gif">
+</p>
+
 ## Steps to run the example
 ### Dependencies
 * We assume that you already installed ROS Kinetic and Gazebo 9 on Ubuntu 16.04 system to be able to test the behaviors. However, if you did not install yet, you can do so following these pages: [http://wiki.ros.org/kinetic/Installation/Ubuntu](http://wiki.ros.org/kinetic/Installation/Ubuntu)  [http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)

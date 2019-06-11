@@ -6,6 +6,10 @@ The following example focuses on the hierarchies of automatas. The basic idea is
 Hence we need low level states with letters from A to Z to generate any behavior which contains letters. The low level states contains the Robotic Arm code to drive the ARM to write letters. For example, State drawA would contain robot code to draw letter A. 
 Hence using hierarchies of these states we can develop complex states, i.e complex words/sentences. With a library of all 26 letters, we can Import the states(words) and construct any word/sentences.
 
+<p align="center">
+  <img src="robot_arm.gif">
+</p>
+
 ## Steps to run the example
 ### Dependencies
 * OpenCV

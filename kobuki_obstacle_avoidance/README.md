@@ -1,6 +1,10 @@
 # kobuki_obstacle_avoidance Behavior
 The following example in VisualStates demonstrates the Obstacle Avoidance behavior developed for Kobuki-Turtlebot robot developed using ROS Kinetic and simulated in Gazebo9. The behavior consists of 2 states -> `Move` and `Avoid` and transitions based on the laser sensor data to detect and avoid obstacles like wall.  
 
+<p align="center">
+  <img src="kobuki_obstacle_avoidance.gif">
+</p>
+
 ## Steps to run the example
 ### Dependencies
 We assume that you already installed ROS and Gazebo on Ubuntu 16.04 system to be able to test the behaviors. However, if you did not install yet, you can do so following these pages: [http://wiki.ros.org/kinetic/Installation/Ubuntu](http://wiki.ros.org/kinetic/Installation/Ubuntu)  [http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)

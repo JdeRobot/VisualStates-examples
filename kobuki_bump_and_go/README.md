@@ -1,6 +1,10 @@
 # kobuki_bump_and_go Behavior
 The following example in VisualStates demonstrates the Obstacle Avoidance behavior developed for Kobuki-Turtlebot robot developed using ROS Kinetic and simulated in Gazebo9. The behavior consists of 3 states -> `Go`, `Rotate` and `GetBack` and transitions based on the laser sensor data to detect a bump, rotate and move in different direction.  
 
+<p align="center">
+  <img src="kobuki_bump_and_go.gif">
+</p>
+
 ## Steps to run the example
 ### Dependencies
 We assume that you already installed ROS and Gazebo on Ubuntu 16.04 system to be able to test the behaviors. However, if you did not install yet, you can do so following these pages: [http://wiki.ros.org/kinetic/Installation/Ubuntu](http://wiki.ros.org/kinetic/Installation/Ubuntu)  [http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)

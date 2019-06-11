@@ -1,6 +1,10 @@
 # Prius Crossing
 The following example in VisualStates demonstrates the Prius Toyota Car behavior at a crossing in Gazebo 9 developed through ROS Kinetic. The following examples illustrates the several functionalities of the tool. The example starts with prius on-road, waits for a person to cross, detects speed-limit sign,  and then makes a left turn. The Prius car follows the road maintaining steer, break and throttle based on vision and control algorithm. The vision algorithm detects the lane in the camera using a pipeline of HSV color filteration followed by a P controller for steer and throttle control. Video Demo: [Prius Crossing](https://www.youtube.com/watch?v=QHVAIJ88pQc)
 
+<p align="center">
+  <img src="prius_crossing.gif">
+</p>
+
 ## Steps to run the example
 ### Dependencies
 We assume that you already installed ROS Kinetic and Gazebo 9 on Ubuntu 16.04 system to be able to test the behaviors. However, if you did not install yet, you can do so following these pages: [http://wiki.ros.org/kinetic/Installation/Ubuntu](http://wiki.ros.org/kinetic/Installation/Ubuntu)  [http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)

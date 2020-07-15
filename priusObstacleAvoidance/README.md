@@ -1,6 +1,10 @@
 # Prius Obstacle Avoidance Behavior
 The following example in VisualStates demonstrates the Prius Toyota Car Obstacle Avoidance behavior in Gazebo 8 developed through ROS Kinetic. The following examples illustrates the Import Functionality present in VisualStates. The prebuilt behavior of ObstacleAvoidance for TurtleBot is imported and updated to be used for Prius Obstacle Avoidance behavior. Also, the child-states developed in PriusSpawn behavior are used to drive the car.
 
+<p align="center">
+  <img src="prius_obstacle_avoidance.gif">
+</p>
+
 ## Steps to run the example
 ### Dependencies
 * We assume that you already installed ROS Kinetic and Gazebo 8 on Ubuntu 16.04 system to be able to test the behaviors. However, if you did not install yet, you can do so following these pages: [http://wiki.ros.org/kinetic/Installation/Ubuntu](http://wiki.ros.org/kinetic/Installation/Ubuntu)  [http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)

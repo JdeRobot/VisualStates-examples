@@ -2,6 +2,10 @@
 The following example in VisualStates demonstrates the Prius Toyota Car Overtake behavior in Gazebo 9 developed through ROS Kinetic. Two prius cars are simulated through a PID controller.
 [https://www.youtube.com/watch?v=lBrgfQM1-X0](Video Link)
 
+<p align="center">
+  <img src="prius_overtake.gif">
+</p>
+
 ## Steps to run the example
 ### Dependencies
 * We assume that you already installed ROS Kinetic and Gazebo 9 on Ubuntu 16.04 system to be able to test the behaviors. However, if you did not install yet, you can do so following these pages: [http://wiki.ros.org/kinetic/Installation/Ubuntu](http://wiki.ros.org/kinetic/Installation/Ubuntu)  [http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install](http://gazebosim.org/tutorials?tut=install_ubuntu&cat=install)

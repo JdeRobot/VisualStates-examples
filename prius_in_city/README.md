@@ -1,10 +1,5 @@
-# Prius Overtake Behavior
-The following example in VisualStates demonstrates the Prius Toyota Car Overtake behavior in Gazebo 9 developed through ROS Kinetic. Two prius cars are simulated through a PID controller.
-[https://www.youtube.com/watch?v=lBrgfQM1-X0](Video Link)
-
-<p align="center">
-  <img src="prius_overtake.gif">
-</p>
+# Prius In The City
+The following example in VisualStates demonstrates the Prius Toyota Car wandering in the city. The environment is developed and simulated in Gazebo 9 and ROS Kinetic. The city is ambiguous to uncertanities like a human crossing a road, a crossing with turns, a car which needs to be overtaken, stop signs, speed signs on the road. The developed behavior in VisualStates is adaptable to all these uncertanities. 
 
 ## Steps to run the example
 ### Dependencies
@@ -17,15 +12,15 @@ The following example in VisualStates demonstrates the Prius Toyota Car Overtake
 cd catkin_ws
 cd src
 cp -r <path_to_visualstates_examples>/prius/* .
-cp -r <path_to_visualstates_examples>/prius_overtake/prius_overtake.xml .
 cp -r <path_to_visualstates_examples>/prius_simulate/prius_simulate.xml .
+cp -r <path_to_visualstates_examples>/prius_in_city/* .
 cd ..
 ```
 
 2. Generate the ROS Package of the behavior using the **visualstates**.
 ```
 rosrun visualstates main.py <path_to_ros_workspace>/src/prius_simulate/prius_simulate.xml
-rosrun visualstates main.py <path_to_ros_workspace>/src/prius_overtake/prius_overtake.xml
+rosrun visualstates main.py <path_to_ros_workspace>/src/prius_overtake/prius_in_city.xml
 
 ```
 Generate ROS package using `Actions -> Generate Python` menu.
@@ -41,11 +36,11 @@ export GAZEBO_MODEL_PATH=<path_to_example>/prius_gazebo/models:$GAZEBO_MODEL_PAT
 ```
 Start the Gazebo simulator and spawn Toyota Prius Car with Prius world, using the toyota prius world launch file
 ```
-roslaunch prius_gazebo prius_overtake.launch
+roslaunch prius_gazebo prius_city.launch
 ```
 Run our generated ROS Node and visualize Toyota Prius Car Spawn Behavior.
 ```
 rosrun prius_simulate prius_simulate.py --displaygui=true
-rosrun prius_overtake prius_overtake.py --displaygui=true
+rosrun prius_overtake prius_in_city.py --displaygui=true
 ```
 

@@ -119,7 +119,7 @@
       <trajectory id='0' type='walking' tension='0'>
         <waypoint>
           <time>0</time>
-          <pose>8 12 0.1 0 0 2.7</pose>
+          <pose>13 12 0.1 0 0 2.7</pose>
         </waypoint>
         <waypoint>
           <time>20</time>
